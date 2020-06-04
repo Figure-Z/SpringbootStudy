@@ -1,4 +1,4 @@
-package com.zsq.SpringBootDemo.vo;
+package com.zsq.SpringBootDemo.modules.test.vo;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
