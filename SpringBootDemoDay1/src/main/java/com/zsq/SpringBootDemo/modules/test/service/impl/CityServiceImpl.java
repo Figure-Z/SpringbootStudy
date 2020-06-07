@@ -17,6 +17,7 @@ import com.zsq.SpringBootDemo.modules.commom.vo.SearchVo;
 import com.zsq.SpringBootDemo.modules.test.dao.CityDao;
 import com.zsq.SpringBootDemo.modules.test.entity.City;
 import com.zsq.SpringBootDemo.modules.test.service.CityService;
+import com.zsq.SpringBootDemo.utils.RedisUtils;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -24,6 +25,9 @@ public class CityServiceImpl implements CityService {
 	@Autowired
 	private CityDao cityDao;
 
+	@Autowired   //在RedisUtils中将其注册为了组建，并注入了
+	private RedisUtils redisUtils;
+	
 	@Override
 	public List<City> getCitiesByCountryId(int countryId) {
 		// 修改了方法，利用注解完成了
@@ -79,6 +83,16 @@ public class CityServiceImpl implements CityService {
 	public Result<Object> deleteCity(int cityId) {
 		cityDao.deleteCity(cityId);
 		return new Result<Object>(ResultStatus.SUCCESS.status,"Delete Success");
+	}
+
+	/**
+	 * 将数据从数据库中查出放入redis在取出来
+	 */
+	@Override
+	public Object migrateCitiesByCountryId(int countryId) {
+		List<City> cities = getCitiesByCountryId(countryId);
+		redisUtils.set("cities", cities);
+		return redisUtils.get("cities");
 	}
 
 }
