@@ -3,14 +3,18 @@ package com.zsq.SpringBootDemo.modules.test.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
+import com.zsq.SpringBootDemo.modules.commom.vo.Result;
 import com.zsq.SpringBootDemo.modules.commom.vo.SearchVo;
 import com.zsq.SpringBootDemo.modules.test.entity.City;
 import com.zsq.SpringBootDemo.modules.test.service.CityService;
@@ -79,6 +83,35 @@ public class CityController {
 		return cityService.getCitiesBySearchVo(searchVo);
 	}
 	
+	/**
+	 * 添加数据---127.0.0.1/api/city ----一般使用post
+	 * @param city
+	 * @return
+	 */
+	@PostMapping(value = "/city",consumes = "application/json")
+	public Result<City> insertCity(@RequestBody City city){
+		return cityService.insertCity(city);
+	}
 	
+	/**
+	 * 更新数据---127.0.0.1/api/city一般使用put
+	 * consumes = "application/x-www-form-urlencoded" 提交为form表单-----使用@ModelAttribute接收
+	 * @param city
+	 * @return
+	 */
+	@PutMapping(value = "/city",consumes = "application/x-www-form-urlencoded")  //请求方式不同，接口名可以一样
+	public Result<City> updateCity(@ModelAttribute City city){
+		return cityService.updateCity(city);
+	}
+	
+	/**
+	 * 删除数据---127.0.0.1/api/city--------@DeleteMapping
+	 * @param cityId
+	 * @return
+	 */
+	@DeleteMapping("/city/{cityId}")
+	public Result<Object> deleteCity(@PathVariable int cityId){
+		return cityService.deleteCity(cityId);
+	}
 	
 }

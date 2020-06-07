@@ -1,7 +1,7 @@
 package com.zsq.SpringBootDemo.modules.commom.vo;
 
 /**
- * Vo用来前端页面相关的数据进行封装，使url中不必包含太多属性
+ * Vo用来前端页面相关的数据进行封装，使url中不必包含太多属性，分页数据
  * @author ZengShiQi
  *
  */
