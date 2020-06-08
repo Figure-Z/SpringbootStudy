@@ -20,7 +20,7 @@ import com.zsq.SpringBootDemo.interceptor.UrlInterceptor;
  * 自定义配置类，配置http
  * @author ZengShiQi
  * 
- * 要实现拦截器要实现WebMvcConfigurer类
+ * 要实现拦截器要实现WebMvcConfigurer类并重写addInterceptors来添加新的拦截器
  *
  */
 @Configuration   //表示配置类   用@Bean来创建对象

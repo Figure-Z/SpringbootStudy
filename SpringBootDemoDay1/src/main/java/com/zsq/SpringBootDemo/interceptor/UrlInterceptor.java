@@ -41,9 +41,9 @@ public class UrlInterceptor implements HandlerInterceptor{
 		String template = (String) modelAndView.getModelMap().get("template");
 		if(StringUtils.isBlank(template)) {
 			if(path.startsWith("/")) {
-				path = path.substring(1);
+				path = path.substring(1);//切割字符串，将开头的/切割掉
 			}
-			modelAndView.getModelMap().addAttribute("template",path.toLowerCase());
+			modelAndView.getModelMap().addAttribute("template",path.toLowerCase());//toLowerCase将大写字符转换成小写的
 		}
 		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
 	}
