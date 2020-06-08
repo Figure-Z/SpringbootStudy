@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.zsq.SpringBootDemo.filter.ParameterFilter;
 
 /**
  * 自定义配置类，配置http
@@ -35,5 +38,13 @@ public class WebMvcConfig {
 		TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();  //创建工厂对象
 		factory.addAdditionalTomcatConnectors(connector());   //将自定义连接器注入
 		return factory;
+	}
+	
+	//配置自定义过滤器
+	@Bean
+	public FilterRegistrationBean<ParameterFilter> filter(){
+		FilterRegistrationBean<ParameterFilter> registeRegistrationBean = new FilterRegistrationBean<>();
+		registeRegistrationBean.setFilter(new ParameterFilter()); //将自己的过滤器添加进去
+		return registeRegistrationBean;
 	}
 }

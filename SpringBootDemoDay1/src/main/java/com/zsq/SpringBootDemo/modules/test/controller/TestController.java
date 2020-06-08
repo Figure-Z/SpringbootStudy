@@ -3,6 +3,8 @@ package com.zsq.SpringBootDemo.modules.test.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zsq.SpringBootDemo.modules.test.entity.City;
@@ -115,12 +118,13 @@ public class TestController{
 	
 	/**
 	 * 访问以下地址就能访问到该方法
-	 * 访问地址127.0.0.1:8080/desc
+	 * 访问地址127.0.0.1/test/desc?key=fuck
 	 * @return
 	 */
 	@RequestMapping("/desc")
 	@ResponseBody   //代表该方法是一个接口 
-	public String testDesc(){
-		return "This is test modle desc.";
+	public String testDesc(HttpServletRequest req,@RequestParam String key){
+		String key2 = req.getParameter("key");
+		return "This is test modle desc." +key + key2;
 	}
 }
