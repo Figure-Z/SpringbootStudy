@@ -75,7 +75,7 @@ public class CityServiceImpl implements CityService {
 	@Transactional
 	public Result<City> updateCity(City city) {
 		cityDao.updateCity(city);
-		int a = 5/0;
+		//int a = 5/0;
 		return new Result<City>(ResultStatus.SUCCESS.status,"Update Success", city);
 	}
 

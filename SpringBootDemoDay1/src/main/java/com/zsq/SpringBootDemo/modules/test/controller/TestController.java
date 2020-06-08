@@ -1,13 +1,21 @@
 package com.zsq.SpringBootDemo.modules.test.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zsq.SpringBootDemo.modules.test.entity.City;
+import com.zsq.SpringBootDemo.modules.test.entity.Country;
+import com.zsq.SpringBootDemo.modules.test.service.CityService;
+import com.zsq.SpringBootDemo.modules.test.service.CountryService;
 import com.zsq.SpringBootDemo.modules.test.vo.ApplicationTest;
 
 
@@ -15,7 +23,46 @@ import com.zsq.SpringBootDemo.modules.test.vo.ApplicationTest;
 @Controller
 @RequestMapping("/test")
 public class TestController{
+	
+	@Autowired
+	private CityService cityService;
 
+	@Autowired
+	private CountryService countryService;
+	/**
+	 * 页面展示
+	 * 127.0.0.1/text/index
+	 * @return
+	 */
+	@RequestMapping("/index")
+	public String indexPage(ModelMap modelMap) {
+		int countryId = 522;
+		List<City> cities = cityService.getCitiesByCountryId(countryId);
+		cities = cities.stream().limit(10).collect(Collectors.toList());
+		Country country = countryService.getCountryByCountryId(countryId);
+		
+		
+		modelMap.addAttribute("template","test/index"); //test文件夹下的index，页面中判断替换body中的部分
+		
+		modelMap.addAttribute("thymeleafTitle","abcdefg");
+		modelMap.addAttribute("checked",true);
+		modelMap.addAttribute("currentNumber", 99);
+		modelMap.addAttribute("changeType", "checkbox");
+		modelMap.addAttribute("baiduUrl","/test/log");
+		modelMap.addAttribute("city", cities.get(0));
+		modelMap.addAttribute("shopLogo"," http://cdn.duitang.com/uploads/item/201308/13/20130813115619_EJCWm.thumb.700_0.jpeg");
+		modelMap.addAttribute("country", country);
+		modelMap.addAttribute("cities", cities);
+		modelMap.addAttribute("updateCityUri", "/api/city");
+		modelMap.addAttribute("template", "test/index");
+		
+		return "index";   //template最外层的index页面
+	}
+	
+	
+	
+	
+	
 	//引入日志
 	private final static Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 	//测试日志输出接口
