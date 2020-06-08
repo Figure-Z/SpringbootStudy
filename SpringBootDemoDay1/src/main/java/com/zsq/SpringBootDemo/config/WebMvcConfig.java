@@ -1,6 +1,7 @@
 package com.zsq.SpringBootDemo.config;
 
 import org.apache.catalina.connector.Connector;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
@@ -9,20 +10,28 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.zsq.SpringBootDemo.filter.ParameterFilter;
+import com.zsq.SpringBootDemo.interceptor.UrlInterceptor;
 
 /**
  * 自定义配置类，配置http
  * @author ZengShiQi
+ * 
+ * 要实现拦截器要实现WebMvcConfigurer类
  *
  */
 @Configuration   //表示配置类   用@Bean来创建对象
 @AutoConfigureAfter({WebMvcAutoConfiguration.class})   //覆盖系统配置类，如果有重复的配置以后面的（自定义）为准
-public class WebMvcConfig {
+public class WebMvcConfig implements WebMvcConfigurer{
 
 	@Value("${server.http.port}")
 	private int httpPort;
+	
+	@Autowired
+	private UrlInterceptor urlInterceptor;
 	
 	@Bean
 	public Connector connector() {
@@ -47,4 +56,13 @@ public class WebMvcConfig {
 		registeRegistrationBean.setFilter(new ParameterFilter()); //将自己的过滤器添加进去
 		return registeRegistrationBean;
 	}
+
+	//添加拦截器
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(urlInterceptor).addPathPatterns("/**");
+	}
+	
+	
+	
 }

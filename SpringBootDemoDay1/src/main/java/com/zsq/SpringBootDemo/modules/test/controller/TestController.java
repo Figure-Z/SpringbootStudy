@@ -34,7 +34,7 @@ public class TestController{
 	private CountryService countryService;
 	/**
 	 * 页面展示
-	 * 127.0.0.1/text/index
+	 * 127.0.0.1/test/index
 	 * @return
 	 */
 	@RequestMapping("/index")
@@ -57,7 +57,7 @@ public class TestController{
 		modelMap.addAttribute("country", country);
 		modelMap.addAttribute("cities", cities);
 		modelMap.addAttribute("updateCityUri", "/api/city");
-		modelMap.addAttribute("template", "test/index");
+		//modelMap.addAttribute("template", "test/index");
 		
 		return "index";   //template最外层的index页面
 	}
