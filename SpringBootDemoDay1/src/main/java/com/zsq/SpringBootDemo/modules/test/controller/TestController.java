@@ -119,6 +119,9 @@ public class TestController{
 	/**
 	 * 访问以下地址就能访问到该方法
 	 * 访问地址127.0.0.1/test/desc?key=fuck
+	 * @RequestParam 是用于接收？这种形式的
+	 * @PathVariable 是用于接收/522这种类型的数据
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/desc")

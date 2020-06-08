@@ -43,7 +43,7 @@ public class WebMvcConfig {
 	//配置自定义过滤器
 	@Bean
 	public FilterRegistrationBean<ParameterFilter> filter(){
-		FilterRegistrationBean<ParameterFilter> registeRegistrationBean = new FilterRegistrationBean<>();
+		FilterRegistrationBean<ParameterFilter> registeRegistrationBean = new FilterRegistrationBean<>(); //创建一个过滤器对象
 		registeRegistrationBean.setFilter(new ParameterFilter()); //将自己的过滤器添加进去
 		return registeRegistrationBean;
 	}

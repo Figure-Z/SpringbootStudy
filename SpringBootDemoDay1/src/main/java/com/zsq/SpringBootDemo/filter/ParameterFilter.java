@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 /**
  * 过滤器类
+ * 
+ * 定义类并重写方法，在doFilter方法中重写包装类HttpServletRequestWrapper里面的方法来对获取到的参数进行判断修改
  */
 
 @WebFilter(filterName = "ParameterFilter",urlPatterns = "/**")
@@ -52,7 +54,7 @@ public class ParameterFilter implements Filter{
 			
 			
 		};
-		chain.doFilter(wrapper, response);
+		chain.doFilter(wrapper, response);  //释放filter
 	}
 
 	@Override
