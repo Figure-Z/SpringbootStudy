@@ -71,6 +71,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		String systemName = System.getProperty("os.name");
 		if(systemName.toLowerCase().startsWith("win")) {
+			//file:  通过该字符来说明是本地的文件
 			registry.addResourceHandler(resourceConfigBean.getResourcePath()).addResourceLocations("file:"+resourceConfigBean.getLocalPathForWindows());
 		}else {
 			registry.addResourceHandler(resourceConfigBean.getResourcePath()).addResourceLocations("file:"+resourceConfigBean.getLocalPathForLinux());
