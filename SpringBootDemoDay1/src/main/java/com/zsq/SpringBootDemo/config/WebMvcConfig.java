@@ -11,6 +11,7 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.zsq.SpringBootDemo.filter.ParameterFilter;
@@ -32,6 +33,8 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	
 	@Autowired
 	private UrlInterceptor urlInterceptor;
+	@Autowired
+	private ResourceConfigBean resourceConfigBean;
 	
 	@Bean
 	public Connector connector() {
@@ -61,6 +64,18 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(urlInterceptor).addPathPatterns("/**");
+	}
+
+	//添加静态资源，通过注入封装好的对象来获取资源路径
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		String systemName = System.getProperty("os.name");
+		if(systemName.toLowerCase().startsWith("win")) {
+			registry.addResourceHandler(resourceConfigBean.getResourcePath()).addResourceLocations("file:"+resourceConfigBean.getLocalPathForWindows());
+		}else {
+			registry.addResourceHandler(resourceConfigBean.getResourcePath()).addResourceLocations("file:"+resourceConfigBean.getLocalPathForLinux());
+
+		}
 	}
 	
 	

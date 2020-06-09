@@ -55,8 +55,10 @@ public class TestController{
 		
 		//可以使用流来完成，这里用MultipartFile提供的方法完成
 		try {
+			String resourcePath = "/java/upload/" +file.getOriginalFilename();
 			//设定上传路径地址
-			String destFilePath = "D:\\java\\upload\\" + file.getOriginalFilename(); //getOriginalFilename得到文件原始名字
+			String destFilePath = "D:" + resourcePath; //getOriginalFilename得到文件原始名字
+			//String destFilePath = "/upload/**" + File.separator + file.getOriginalFilename(); //getOriginalFilename得到文件原始名字
 			File destFile = new File(destFilePath);
 			file.transferTo(destFile);
 		} catch (IllegalStateException | IOException e) {
@@ -77,7 +79,7 @@ public class TestController{
 	 */
 	@PostMapping(value = "/files" , consumes = "multipart/form-data")
 	public String uploadFiles(ModelMap modelMap,@RequestParam MultipartFile[] files,RedirectAttributes redirectAttributes) {
-		boolean isEmpty = true;
+		boolean isEmpty = true; //判断是否选择了文件
 		for(MultipartFile file : files) {
 			if(file.isEmpty()) {
 				continue;
@@ -94,6 +96,7 @@ public class TestController{
 				return "redirect:/test/index";
 			}
 		}
+		
 		if(isEmpty) {
 			redirectAttributes.addFlashAttribute("message","please select file");
 		}else {
@@ -131,6 +134,9 @@ public class TestController{
 		modelMap.addAttribute("cities", cities);
 		modelMap.addAttribute("updateCityUri", "/api/city");
 		//modelMap.addAttribute("template", "test/index");
+		
+		//添加路径为静态资源路径，在WebMvcConfig中配置了，可以用自定义的path来代替绝对路径
+		modelMap.addAttribute("resourceLogo","/upload/111.jpg");
 		
 		return "index";   //template最外层的index页面
 	}

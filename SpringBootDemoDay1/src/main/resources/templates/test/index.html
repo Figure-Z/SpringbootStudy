@@ -16,6 +16,8 @@
 		<button type="submit">上传</button>
 	</form>
 	
+	<img th:src="@{${resourceLogo}}"/> <!--通过静态资源路径获取-->
+	
 	<p>==================================================================</p>
 	<h3>th:text</h3><!--text文本-->
 	<h1 th:text="${thymeleafTitle}">this is thymeleaf title</h1>
