@@ -1,5 +1,7 @@
 package com.zsq.SpringBootDemo.modules.test.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.zsq.SpringBootDemo.modules.test.entity.City;
 import com.zsq.SpringBootDemo.modules.test.entity.Country;
@@ -32,6 +37,74 @@ public class TestController{
 
 	@Autowired
 	private CountryService countryService;
+	/**
+	 * 单文件上传
+	 * @param modelMap
+	 * @param file
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@PostMapping(value = "/file" , consumes = "multipart/form-data")
+	public String uploadFile(ModelMap modelMap,@RequestParam MultipartFile file,RedirectAttributes redirectAttributes) {
+	
+		//重定向要想在页面上获取到，要用到redirectAttributes.addFlashAttribute
+		if(file.isEmpty()) {
+			redirectAttributes.addFlashAttribute("message","please select file");
+			return "redirect:/test/index";
+		}
+		
+		//可以使用流来完成，这里用MultipartFile提供的方法完成
+		try {
+			//设定上传路径地址
+			String destFilePath = "D:\\java\\upload\\" + file.getOriginalFilename(); //getOriginalFilename得到文件原始名字
+			File destFile = new File(destFilePath);
+			file.transferTo(destFile);
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("message","upload fail");
+			return "redirect:/test/index";
+		}
+		//重定向下ModelMap是不能添加返回（return）信息的
+		redirectAttributes.addFlashAttribute("message","upload success");
+		return "redirect:/test/index";
+	}
+	/**
+	 * 多文件上传
+	 * @param modelMap
+	 * @param files
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@PostMapping(value = "/files" , consumes = "multipart/form-data")
+	public String uploadFiles(ModelMap modelMap,@RequestParam MultipartFile[] files,RedirectAttributes redirectAttributes) {
+		boolean isEmpty = true;
+		for(MultipartFile file : files) {
+			if(file.isEmpty()) {
+				continue;
+			}
+			
+			try {
+				String destFilePath = "D:\\java\\upload\\" + file.getOriginalFilename(); //getOriginalFilename得到文件原始名字
+				File destFile = new File(destFilePath);
+				file.transferTo(destFile);
+				isEmpty=false;
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+				redirectAttributes.addFlashAttribute("message","upload fail");
+				return "redirect:/test/index";
+			}
+		}
+		if(isEmpty) {
+			redirectAttributes.addFlashAttribute("message","please select file");
+		}else {
+			redirectAttributes.addFlashAttribute("message","upload success");
+		}
+		
+		return"redirect:/test/index";
+	}
+	
+	
+	
 	/**
 	 * 页面展示
 	 * 127.0.0.1/test/index

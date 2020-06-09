@@ -1,16 +1,30 @@
-<section><!--ÇÐÆ¬±êÇ©-->
+<section><!--ç¢Žç‰‡éƒ¨åˆ†-->
 	Hello world! This is test module index.
 	
-	<!--thymeleaf±êÇ©-->
+	<!--thymelea-->
 	
-	<h3>th:text</h3><!--textÎÄ±¾±êÇ©-->
+	<h3>file upload</h3>
+	<p th:text="${message}"></p>
+	<form action="/test/file" method="post" enctype="multipart/form-data">
+		<input type="file" name="file">
+		<button type="submit">ä¸Šä¼ </button>
+	</form>
+	
+	<form action="/test/files" method="post" enctype="multipart/form-data">
+		<input type="file" name="files">
+		<input type="file" name="files">
+		<button type="submit">ä¸Šä¼ </button>
+	</form>
+	
+	<p>==================================================================</p>
+	<h3>th:text</h3><!--textæ–‡æœ¬-->
 	<h1 th:text="${thymeleafTitle}">this is thymeleaf title</h1>
 	<p th:text="${thymeleafTitle}">this is the thymeleaf ti-tle</p>
 	<p>==================================================================</p>
 
 	<h3>th:if,th:unless.</h3>
-	<p th:if="${checked} == true">If true, this will display</p> <!--Èç¹ûÎªtrueÔòÏÔÊ¾-->
-	<p th:unless="${checked} == false">If not false, this will display</p><!--th:unless£¬Èç¹û²»Îª£¬ÔòÏÔÊ¾-->
+	<p th:if="${checked} == true">If true, this will display</p> <!--ï¿½ï¿½ï¿½Îªtrueï¿½ï¿½ï¿½ï¿½Ê¾-->
+	<p th:unless="${checked} == false">If not false, this will display</p><!--th:unlessï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾-->
 	<p th:if="${currentNumber}&lt;100">print if the currentNumber &lt;100</p>
 	<p th:if="${thymeleafTitle} == null">name is null</p>
 	<p>==================================================================</p>
@@ -22,13 +36,13 @@
 	<h3>url,href</h3>
 	<a th:href="@{http://www.baidu.com}" target="_blank">Click it to turn to baidu</a><br>
 	<a th:href="${baiduUrl}" target="_blank">Click it to turn to Shop beauty</a><br>
-    <!-- ·â×°¶¯Ì¬url¡¢url²éÑ¯²ÎÊý -->
+    <!--è·¯å¾„ä¿¡æ¯-->
     <a th:href="@{'/test/index/'+${city.cityId}}" th:text="${city.cityName}"></a>
 	<a th:href="@{/test/index(pageSize=${city.cityId},currentPage='1')}" th:text="${city.cityName}"></a>
 	<img th:src="@{${shopLogo}}"/>
 	<p>==================================================================</p>
 	
-	<!--ºó¶Ë·â×°µÄ¶ÔÏóÐÎÊ½-->
+	<!--å¯¹è±¡-->
 	<h3>th:object</h3>
 	<div th:object="${country}">
 	    <p th:text="*{countryId}">countryId</p>
@@ -37,7 +51,7 @@
 	</div>
 	<p>==================================================================</p>
 	
-	<!--foreach±éÀú-->
+	<!--foreachéåŽ†-->
 	<h3>th:each </h3>
 	<table>
 	    <th>cityId</th><th>cityName</th><th>countryId</th>
@@ -52,9 +66,9 @@
 			th:value="${city.cityId}" th:text="${city.cityName}"></option>
 	</select>
 	<p>==================================================================</p>
-	<!--½øÐÐÊý¾ÝµÄÐÞ¸Ä-->
+	<!---->
 	<h3>post form, th:action, th:object, th:field</h3>
-    <!-- ÎÒÃÇ¿ÉÒÔÖ¸¶¨ÊÇGET»¹ÊÇPOSTÇëÇó,ÕâÀïÐèÒª×¢ÒâµÄÊÇÓÐµÄä¯ÀÀÆ÷²¢²»Ö§³ÖPUTÇëÇó,SpringMVCÎªÎÒÃÇÌá¹©ÁËÒ»ÖÖ½â¾ö·½°¸,Ìí¼ÓhiddenÖ¸¶¨method -->
+    
     <form th:action="${updateCityUri}" method="post" th:object="${city}">
         <input type="hidden" name="_method" value="PUT">
         City Id:			<input th:field="*{cityId}" readonly/>
