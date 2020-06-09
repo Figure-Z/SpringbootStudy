@@ -1,6 +1,7 @@
 package com.zsq.SpringBootDemo.modules.test.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,8 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.zsq.SpringBootDemo.config.ResourceConfigBean;
 import com.zsq.SpringBootDemo.modules.test.entity.City;
 import com.zsq.SpringBootDemo.modules.test.entity.Country;
 import com.zsq.SpringBootDemo.modules.test.service.CityService;
@@ -37,6 +44,40 @@ public class TestController{
 
 	@Autowired
 	private CountryService countryService;
+	
+	@Autowired
+	private ResourceConfigBean resourceConfigBean;
+	
+	//引入日志
+	private final static Logger LOGGER = LoggerFactory.getLogger(TestController.class);
+	
+	/**
+	 * 文件下载
+	 */
+	@RequestMapping("/download")
+	@ResponseBody
+	public ResponseEntity<Resource> download(@RequestParam String fileName){
+		
+		String resourcePath = resourceConfigBean.getResourcePath()+fileName;
+		try {
+			Resource resource = new UrlResource(ResourceUtils.getURL(resourcePath));
+			/**
+			 * CONTENT_TYPE -----下载类型--------application/octet-stream等于* ，表示全类型
+			 * CONTENT_DISPOSITION-----想当于扩展MINE-------后面则是对下载的名称进行格式化，防止乱码
+			 * body则是下载主体（个人认为是具有路径的对象文件）
+			 */
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_TYPE,"application/octet-stream")
+					.header(HttpHeaders.CONTENT_DISPOSITION,String.format("attachment; filename=%s", fileName))
+					.body(resource);	
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * 单文件上传
 	 * @param modelMap
@@ -55,12 +96,16 @@ public class TestController{
 		
 		//可以使用流来完成，这里用MultipartFile提供的方法完成
 		try {
-			String resourcePath = "/java/upload/" +file.getOriginalFilename();
+			//硬编码绝对路径方式
+			//String resourcePath = "/java/upload/" +file.getOriginalFilename();
 			//设定上传路径地址
-			String destFilePath = "D:" + resourcePath; //getOriginalFilename得到文件原始名字
-			//String destFilePath = "/upload/**" + File.separator + file.getOriginalFilename(); //getOriginalFilename得到文件原始名字
-			File destFile = new File(destFilePath);
-			file.transferTo(destFile);
+			//String destFilePath = "D:" + resourcePath; //getOriginalFilename得到文件原始名字
+			
+			//通过静态资源配置路径来完成  ==/java/upload/+要上传的文件名
+			String resourcePath = resourceConfigBean.getResourcePath() + file.getOriginalFilename();
+			//通过自带的ResourceUtils类方法获取路径
+			File destFile = new File(ResourceUtils.getURL(resourcePath).getPath()); //个人认为它是将上传地址封装到要上传的文件上，来让文件有一个明确的上传位置，由transferTo确认上传
+			file.transferTo(destFile); //上传到指定路径下
 		} catch (IllegalStateException | IOException e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("message","upload fail");
@@ -70,6 +115,7 @@ public class TestController{
 		redirectAttributes.addFlashAttribute("message","upload success");
 		return "redirect:/test/index";
 	}
+	
 	/**
 	 * 多文件上传
 	 * @param modelMap
@@ -145,8 +191,7 @@ public class TestController{
 	
 	
 	
-	//引入日志
-	private final static Logger LOGGER = LoggerFactory.getLogger(TestController.class);
+	
 	//测试日志输出接口
 	@RequestMapping("/log")
 	@ResponseBody

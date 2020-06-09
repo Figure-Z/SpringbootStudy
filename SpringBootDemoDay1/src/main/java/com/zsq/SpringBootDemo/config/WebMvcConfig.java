@@ -10,6 +10,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -30,7 +31,6 @@ public class WebMvcConfig implements WebMvcConfigurer{
 
 	@Value("${server.http.port}")
 	private int httpPort;
-	
 	@Autowired
 	private UrlInterceptor urlInterceptor;
 	@Autowired
@@ -71,10 +71,13 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		String systemName = System.getProperty("os.name");
 		if(systemName.toLowerCase().startsWith("win")) {
-			//file:  通过该字符来说明是本地的文件
-			registry.addResourceHandler(resourceConfigBean.getResourcePath()).addResourceLocations("file:"+resourceConfigBean.getLocalPathForWindows());
+			//file:  通过该字符来说明是本地的文件,ResourceUtils.FILE_URL_PREFIX == "file:"可在源码中看到
+			//addResourceHandler表示读取到哪个包下的文件，addResourceLocations表示设置要公开的资源
+			registry.addResourceHandler(resourceConfigBean.getResourcePathPattern())
+			.addResourceLocations(ResourceUtils.FILE_URL_PREFIX+resourceConfigBean.getLocalPathForWindows());
 		}else {
-			registry.addResourceHandler(resourceConfigBean.getResourcePath()).addResourceLocations("file:"+resourceConfigBean.getLocalPathForLinux());
+			registry.addResourceHandler(resourceConfigBean.getResourcePathPattern())
+			.addResourceLocations(ResourceUtils.FILE_URL_PREFIX+resourceConfigBean.getLocalPathForLinux());
 
 		}
 	}

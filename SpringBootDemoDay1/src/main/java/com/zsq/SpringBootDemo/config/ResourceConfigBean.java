@@ -8,17 +8,29 @@ import org.springframework.stereotype.Component;
 @PropertySource("classpath:config/application.properties")
 public class ResourceConfigBean {
 
+	
+
 	/**
 	 * 通过@value来从配置文件中读取资源路径
 	 */
 	
 	@Value("${spring.resource.path}")
 	private String resourcePath;
+	@Value("${spring.resource.path.pattern}")
+	private String resourcePathPattern;
 	@Value("${spring.resource.folder.windows}")
 	private String localPathForWindows;
 	@Value("${spring.resource.folder.linux}")
 	private String localPathForLinux;
 
+	public String getResourcePathPattern() {
+		return resourcePathPattern;
+	}
+
+	public void setResourcePathPattern(String resourcePathPattern) {
+		this.resourcePathPattern = resourcePathPattern;
+	}
+	
 	public String getResourcePath() {
 		return resourcePath;
 	}
