@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zsq.SpringBootDemo.modules.account.Service.UserService;
 import com.zsq.SpringBootDemo.modules.account.entity.User;
+import com.zsq.SpringBootDemo.modules.account.service.UserService;
 import com.zsq.SpringBootDemo.modules.commom.vo.Result;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.zsq.SpringBootDemo.modules.account.Service;
+package com.zsq.SpringBootDemo.modules.account.service;
 
 import java.util.List;
 
