@@ -64,7 +64,7 @@ public class TestController{
 			/**
 			 * CONTENT_TYPE -----下载类型--------application/octet-stream等于* ，表示全类型
 			 * CONTENT_DISPOSITION-----想当于扩展MINE-------后面则是对下载的名称进行格式化，防止乱码
-			 * body则是下载主体（个人认为是具有路径的对象文件）
+			 * body则是下载主体（真实路径下的对象文件）
 			 */
 			return ResponseEntity.ok()
 					.header(HttpHeaders.CONTENT_TYPE,"application/octet-stream")
@@ -101,9 +101,9 @@ public class TestController{
 			//设定上传路径地址
 			//String destFilePath = "D:" + resourcePath; //getOriginalFilename得到文件原始名字
 			
-			//通过静态资源配置路径来完成  ==/java/upload/+要上传的文件名
+			//通过静态资源配置路径来完成  ==/java/upload/+要上传的文件名  ----获取spring的映射地址
 			String resourcePath = resourceConfigBean.getResourcePath() + file.getOriginalFilename();
-			//通过自带的ResourceUtils类方法获取路径
+			//通过自带的ResourceUtils类方法获取路径------通过映射来找到真实地址
 			File destFile = new File(ResourceUtils.getURL(resourcePath).getPath()); //个人认为它是将上传地址封装到要上传的文件上，来让文件有一个明确的上传位置，由transferTo确认上传
 			file.transferTo(destFile); //上传到指定路径下
 		} catch (IllegalStateException | IOException e) {
@@ -167,7 +167,7 @@ public class TestController{
 		Country country = countryService.getCountryByCountryId(countryId);
 		
 		
-		modelMap.addAttribute("template","test/index"); //test文件夹下的index，页面中判断替换body中的部分
+		//modelMap.addAttribute("template","test/index"); //test文件夹下的index，页面中判断替换body中的部分
 		
 		modelMap.addAttribute("thymeleafTitle","abcdefg");
 		modelMap.addAttribute("checked",true);
