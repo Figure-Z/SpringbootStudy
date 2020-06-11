@@ -11,6 +11,8 @@ public interface UserService {
 	
 	User getUserByUserName(String userName);
 	
+	Result<User> login(User user);
+	
 	Result<User> insertUser(User user);
 	
 	Result<User> updateUserMessage(User user);

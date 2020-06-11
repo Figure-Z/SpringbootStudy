@@ -31,6 +31,11 @@ public class UserController {
 		return userService.insertUser(user);
 	}
 	
+	@PostMapping(value = "/login",consumes = "application/json")
+	public Result<User> login(@RequestBody User user){
+		return userService.login(user);
+	}
+	
 	@PutMapping(value = "/user",consumes = "application/json")
 	public Result<User> updateUserMessage(@RequestBody User user){
 		return userService.updateUserMessage(user);
