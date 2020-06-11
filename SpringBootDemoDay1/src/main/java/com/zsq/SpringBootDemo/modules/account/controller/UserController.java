@@ -21,22 +21,22 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping("/select/user")
+	@RequestMapping("/user")
 	public List<User> selectUser(){
 		return userService.selectUser();
 	}
 	
-	@PostMapping(value = "/insert/user",consumes = "application/json")
+	@PostMapping(value = "/user",consumes = "application/json")
 	public Result<User> insertUser(@RequestBody User user) {
 		return userService.insertUser(user);
 	}
 	
-	@PutMapping(value = "/update/user",consumes = "application/json")
+	@PutMapping(value = "/user",consumes = "application/json")
 	public Result<User> updateUserMessage(@RequestBody User user){
 		return userService.updateUserMessage(user);
 	}
 	
-	@DeleteMapping("/delete/user")
+	@DeleteMapping("/user")
 	public Result<Object> deleteUser(@RequestBody int userId){
 		return userService.deleteUser(userId);
 	}

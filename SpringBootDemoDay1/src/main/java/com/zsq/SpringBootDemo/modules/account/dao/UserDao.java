@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -17,8 +18,13 @@ public interface UserDao {
 	@Select("select * from user")
 	List<User> selectUser();
 	
+	@Select("select * from user where user_name = #{userName}")
+	User getUserByUserName(String userName);
+	
 	//插入用户
-	@Insert("insert into user (user_name,password,create_date) values(#{userName}，#{password}，#{createDate})")
+	@Insert("insert into user (user_name, password, create_date) "
+			+ "values (#{userName}, #{password}, #{createDate})")
+	@Options(useGeneratedKeys = true, keyColumn = "user_id", keyProperty = "userId")
 	void insertUser(User user);
 	
 	//更新数据

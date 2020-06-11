@@ -11,4 +11,10 @@ public class LoginController {
 	public String loginPage() {
 		return "indexSimple";
 	}
+	
+	@RequestMapping("/register")
+	public String registerPage() {
+		return "indexSimple";
+	}
 }
+

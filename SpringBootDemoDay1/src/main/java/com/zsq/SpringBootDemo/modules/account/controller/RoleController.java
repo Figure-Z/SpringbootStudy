@@ -21,22 +21,22 @@ public class RoleController {
 	@Autowired
 	private RoleService roleService;
 	
-	@RequestMapping("/select/role")
+	@RequestMapping("/role")
 	public List<Role> selectRoles(){
 		return roleService.selctRoles();
 	}
 	
-	@PostMapping(value = "/insert/role",consumes = "application/json")
+	@PostMapping(value = "/role",consumes = "application/json")
 	public Result<Role> insertRole(@RequestBody Role role){
 		return roleService.insertRole(role);
 	}
 	
-	@PutMapping(value = "/update/role",consumes = "application/json")
+	@PutMapping(value = "/role",consumes = "application/json")
 	Result<Role> updateRole(@RequestBody Role role){
 		return roleService.updateRole(role);
 	}
 	
-	@DeleteMapping("/delete/role")
+	@DeleteMapping("/role")
 	Result<Object> deleteRole(@RequestBody int roleId){
 		return roleService.deleteRole(roleId);
 	}

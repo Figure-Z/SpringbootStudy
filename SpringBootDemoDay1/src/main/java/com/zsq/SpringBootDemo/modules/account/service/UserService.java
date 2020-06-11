@@ -9,9 +9,12 @@ public interface UserService {
 
 	List<User> selectUser();
 	
+	User getUserByUserName(String userName);
+	
 	Result<User> insertUser(User user);
 	
 	Result<User> updateUserMessage(User user);
 	
 	Result<Object> deleteUser(int userId);
+	
 }
