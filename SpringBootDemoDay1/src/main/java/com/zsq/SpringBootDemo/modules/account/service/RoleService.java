@@ -7,7 +7,7 @@ import com.zsq.SpringBootDemo.modules.commom.vo.Result;
 
 public interface RoleService {
 
-	List<Role> selctRoles();
+	List<Role> getRoles();
 	
 	Result<Role> insertRole(Role role);
 	

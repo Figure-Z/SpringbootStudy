@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.zsq.SpringBootDemo.modules.account.entity.User;
 import com.zsq.SpringBootDemo.modules.account.service.UserService;
 import com.zsq.SpringBootDemo.modules.commom.vo.Result;
+import com.zsq.SpringBootDemo.modules.commom.vo.SearchVo;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api")
 public class UserController {
 
 	@Autowired
@@ -44,5 +46,10 @@ public class UserController {
 	@DeleteMapping("/user")
 	public Result<Object> deleteUser(@RequestBody int userId){
 		return userService.deleteUser(userId);
+	}
+	
+	@PostMapping(value = "/users",consumes = "application/json")
+	public PageInfo<User> getUsersBySearchVo(@RequestBody SearchVo searchVo){
+		return userService.getUsersBySearchVo(searchVo);
 	}
 }

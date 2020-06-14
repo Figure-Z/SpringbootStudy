@@ -15,15 +15,15 @@ import com.zsq.SpringBootDemo.modules.account.service.RoleService;
 import com.zsq.SpringBootDemo.modules.commom.vo.Result;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api")
 public class RoleController {
 	
 	@Autowired
 	private RoleService roleService;
 	
-	@RequestMapping("/role")
+	@RequestMapping("/roles")
 	public List<Role> selectRoles(){
-		return roleService.selctRoles();
+		return roleService.getRoles();
 	}
 	
 	@PostMapping(value = "/role",consumes = "application/json")

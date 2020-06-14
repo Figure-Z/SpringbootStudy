@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.zsq.SpringBootDemo.modules.account.entity.User;
+import com.zsq.SpringBootDemo.modules.commom.vo.SearchVo;
 
 @Mapper
 public interface UserDao {
@@ -20,6 +21,24 @@ public interface UserDao {
 	
 	@Select("select * from user where user_name = #{userName}")
 	User getUserByUserName(String userName);
+	
+	@Select("<script>" + 
+			"select * from user "
+			+ "<where> "
+			+ "<if test='keyWord != \"\" and keyWord != null'>"
+			+ " and (user_name like '%${keyWord}%') "
+			+ "</if>"
+			+ "</where>"
+			+ "<choose>"
+			+ "<when test='orderBy != \"\" and orderBy != null'>"
+			+ " order by ${orderBy} ${sort}"
+			+ "</when>"
+			+ "<otherwise>"
+			+ " order by user_id desc"
+			+ "</otherwise>"
+			+ "</choose>"
+			+ "</script>")
+	List<User> getUsersBySearchVo(SearchVo searchVo);
 	
 	//插入用户
 	@Insert("insert into user (user_name, password, create_date) "

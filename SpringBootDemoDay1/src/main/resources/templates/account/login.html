@@ -92,7 +92,7 @@ function login(){
 		success:function(data){
 			if(data.status == 200){
 				layer.msg(data.message,{icon:0});
-				//location.href = "/index";
+				location.href = "/common/dashboard";
 			}else{
 				layer.msg(data.message,{icon:0});
 			}
