@@ -15,7 +15,7 @@ import com.zsq.SpringBootDemo.modules.account.service.ResourceService;
 import com.zsq.SpringBootDemo.modules.commom.vo.Result;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api")
 public class ResourceController {
 
 	@Autowired

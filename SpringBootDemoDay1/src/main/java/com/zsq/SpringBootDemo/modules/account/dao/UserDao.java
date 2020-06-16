@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -15,9 +18,16 @@ import com.zsq.SpringBootDemo.modules.commom.vo.SearchVo;
 @Mapper
 public interface UserDao {
 
-	//查询所有用户对象
-	@Select("select * from user")
-	List<User> selectUser();
+	//查询所有用户对象，连表查询
+	@Select("select * from user where user_id = #{userId}")
+	@Results(id = "userResult",value = {
+			@Result(column = "user_id",property = "userId"),
+			@Result(column = "user_id",property = "roles",
+			javaType = List.class,
+			many = @Many(select = "com.zsq.SpringBootDemo.modules.account.dao."
+					+"RoleDao.getRolesByUserId"))
+	})
+	User getUserByUserId(int userId);
 	
 	@Select("select * from user where user_name = #{userName}")
 	User getUserByUserName(String userName);
@@ -40,6 +50,7 @@ public interface UserDao {
 			+ "</script>")
 	List<User> getUsersBySearchVo(SearchVo searchVo);
 	
+	
 	//插入用户
 	@Insert("insert into user (user_name, password, create_date) "
 			+ "values (#{userName}, #{password}, #{createDate})")
@@ -47,7 +58,7 @@ public interface UserDao {
 	void insertUser(User user);
 	
 	//更新数据
-	@Update("update user set password = #{password} where user_id = #{userId}")
+	@Update("update user set user_name = #{userName} where user_id = #{userId}")
 	void updateUserMessage(User user);
 	
 	//删除用户

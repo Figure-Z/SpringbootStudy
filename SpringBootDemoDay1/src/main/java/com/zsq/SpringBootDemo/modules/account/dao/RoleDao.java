@@ -27,4 +27,13 @@ public interface RoleDao {
 	
 	@Delete("delete from role where role_id = #{roleId}")
 	Result<Object> deleteRole(int roleId);
+	
+	/**
+	 * 查询角色
+	 * @param userId
+	 * @return
+	 */
+	@Select("select * from role role left join user_role userRole "
+			+ "on role.role_id = userRole.role_id where userRole.user_id = #{userId}")
+	List<Role> getRolesByUserId(int userId);
 }

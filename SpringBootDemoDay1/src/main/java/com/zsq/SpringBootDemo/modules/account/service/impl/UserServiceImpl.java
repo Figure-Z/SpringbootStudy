@@ -30,45 +30,66 @@ public class UserServiceImpl implements UserService{
 	private UserRoleDao userRoleDao;
 	
 	@Override
-	public List<User> selectUser(){
-		return  userDao.selectUser();
+	public User getUserByUserId(int userId) {
+		return userDao.getUserByUserId(userId);
 	}
 
-	@Override
-	@Transactional
-	public Result<User> insertUser(User user) {
-		User userTemp = getUserByUserName(user.getUserName());
-		if(userTemp != null) {
-			return new Result<User>(ResultStatus.FAILD.status,"User name is repeat");
-		}
-		
-		user.setCreateDate(new Date());
-		user.setPassword(MD5Util.getMD5(user.getPassword()));
-		userDao.insertUser(user);
-		//删除该用户的所有角色
-		userRoleDao.deleteRolesByUserId(user.getUserId());
-		List<Role> roles = user.getRoles();
-		if(roles!=null && roles.size()>0) {
-			for (Role role : roles) {
-				userRoleDao.insertUserRole(user.getUserId(), role.getRoleId());
-			}
-		}
-		
-		
-		return new Result<User>(ResultStatus.SUCCESS.status,"Insert Success", user);
-	}
-
-	@Override
-	@Transactional
-	public Result<User> updateUserMessage(User user) {
-		userDao.updateUserMessage(user);
-		return new Result<User>(ResultStatus.SUCCESS.status,"Update Success",user);
-	}
+	/**
+	 * 插入用户数据
+	 */
+//	@Override
+//	@Transactional
+//	public Result<User> insertUser(User user) {
+//		User userTemp = getUserByUserName(user.getUserName());
+//		if(userTemp != null) {
+//			return new Result<User>(ResultStatus.FAILD.status,"User name is repeat");
+//		}
+//		
+//		user.setCreateDate(new Date());
+//		user.setPassword(MD5Util.getMD5(user.getPassword()));
+//		userDao.insertUser(user);
+//		//删除该用户的所有角色
+//		userRoleDao.deleteRolesByUserId(user.getUserId());
+//		List<Role> roles = user.getRoles();
+//		if(roles!=null && roles.size()>0) {
+//			for (Role role : roles) {
+//				userRoleDao.insertUserRole(user.getUserId(), role.getRoleId());
+//			}
+//		}
+//		
+//		
+//		return new Result<User>(ResultStatus.SUCCESS.status,"Insert Success", user);
+//	}
+//
+//	/**
+//	 * 更新用户
+//	 */
+//	@Override
+//	@Transactional
+//	public Result<User> updateUserMessage(User user) {
+//		//判断要更新的user是否存在
+//		User userTemp = getUserByUserName(user.getUserName());
+//		if(userTemp != null && userTemp.getUserId() != user.getUserId()) {
+//			return new Result<User>(ResultStatus.FAILD.status,"User name is repeat");
+//		}
+//		userDao.updateUserMessage(user);
+//		
+//		userRoleDao.deleteRolesByUserId(user.getUserId());
+//		//获取到check选择的role并添加到表中
+//		List<Role> roles = user.getRoles();
+//		if(roles!=null && roles.size()>0) {
+//			for (Role role : roles) {
+//				userRoleDao.insertUserRole(user.getUserId(), role.getRoleId());
+//			}
+//		}
+//		return new Result<User>(ResultStatus.SUCCESS.status,"Update Success",user);
+//	}
 
 	@Override
 	@Transactional
 	public Result<Object> deleteUser(int userId) {
 		userDao.deleteUser(userId);
+		userRoleDao.deleteRolesByUserId(userId);//消除角色
 		return new Result<Object>(ResultStatus.SUCCESS.status,"Delete Success");
 	}
 
@@ -94,5 +115,37 @@ public class UserServiceImpl implements UserService{
 				Optional.ofNullable(userDao.getUsersBySearchVo(searchVo))
 				.orElse(Collections.emptyList()));
 	}
+
+	/**
+	 * 更新和插入的共和
+	 */
+	@Override
+	@Transactional
+	public Result<User> editUser(User user) {
+		//判断要更新的user是否存在
+				User userTemp = getUserByUserName(user.getUserName());
+				if(userTemp != null && userTemp.getUserId() != user.getUserId()) {
+					return new Result<User>(ResultStatus.FAILD.status,"User name is repeat");
+				}
+				
+				if(user.getUserId()>0) {
+					userDao.updateUserMessage(user);
+					userRoleDao.deleteRolesByUserId(user.getUserId());
+				}else {
+					user.setCreateDate(new Date());
+					user.setPassword(MD5Util.getMD5(user.getPassword()));
+					userDao.insertUser(user);
+				}
+				//获取到check选择的role并添加到表中
+				List<Role> roles = user.getRoles();
+				if(roles!=null && roles.size()>0) {
+					for (Role role : roles) {
+						userRoleDao.insertUserRole(user.getUserId(), role.getRoleId());
+					}
+				}
+				return new Result<User>(ResultStatus.SUCCESS.status,"Edit Success",user);
+	}
+
+	
 
 }
