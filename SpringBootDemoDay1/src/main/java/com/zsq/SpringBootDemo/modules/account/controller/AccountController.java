@@ -11,4 +11,14 @@ public class AccountController {
 	public String UsersPage() {
 		return "index";
 	}
+	
+	@RequestMapping("/roles")
+	public String RolePage() {
+		return "index";
+	}
+	
+	@RequestMapping("/resources")
+	public String ResourcePage() {
+		return "index";
+	}
 }

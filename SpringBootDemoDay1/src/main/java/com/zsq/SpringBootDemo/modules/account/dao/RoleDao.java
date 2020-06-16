@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.zsq.SpringBootDemo.modules.account.entity.Role;
 import com.zsq.SpringBootDemo.modules.commom.vo.Result;
+import com.zsq.SpringBootDemo.modules.commom.vo.SearchVo;
 
 @Mapper
 public interface RoleDao {
@@ -21,13 +22,7 @@ public interface RoleDao {
 	@Insert("insert into role (role_name) values (#{roleName})")
 	@Options(useGeneratedKeys = true,keyColumn = "role_id",keyProperty = "roleId")
 	Result<Role> insertRole(Role role);
-	
-	@Update("update role set role_name = #{roleName} where role_id = #{roleId}")
-	Result<Role> updateRole(Role role);
-	
-	@Delete("delete from role where role_id = #{roleId}")
-	Result<Object> deleteRole(int roleId);
-	
+		
 	/**
 	 * 查询角色
 	 * @param userId
@@ -36,4 +31,42 @@ public interface RoleDao {
 	@Select("select * from role role left join user_role userRole "
 			+ "on role.role_id = userRole.role_id where userRole.user_id = #{userId}")
 	List<Role> getRolesByUserId(int userId);
+	
+	@Insert("insert role(role_name) value(#{roleName})")
+	@Options(useGeneratedKeys=true, keyProperty="roleId", keyColumn="role_id")
+	void addRole(Role role);
+	
+	@Update("update role set role_name = #{roleName} where role_id = #{roleId}")
+	void updateRole(Role role);
+	
+	@Delete("delete from role where role_id = #{roleId}")
+	void deleteRole(int roleId);
+	
+	@Select("<script>" + 
+			"select * from role "
+			+ "<where> "
+			+ "<if test='keyWord != \"\" and keyWord != null'>"
+			+ "and role_name like '%${keyWord}%' "
+			+ "</if>"
+			+ "</where>"
+			+ "<choose>"
+			+ "<when test='orderBy != \"\" and orderBy != null'>"
+			+ "order by ${orderBy} ${sort}"
+			+ "</when>"
+			+ "<otherwise>"
+			+ "order by role_id desc"
+			+ "</otherwise>"
+			+ "</choose>"
+			+ "</script>")
+	List<Role> getRolesBySearchVo(SearchVo searchVo);
+	
+	@Select("select * from role role left join role_resource roleResource "
+			+ "on role.role_id = roleResource.role_id where roleResource.resource_id = #{resourceId}")
+	List<Role> getRolesByResourceId(int resourceId);
+	
+	@Select("select * from role where role_id=#{roleId}")
+	Role getRoleById(int roleId);
+	
+	@Select("select * from role where role_name = #{roleName} limit 1")
+	Role getRoleByRoleName(String roleName);
 }
