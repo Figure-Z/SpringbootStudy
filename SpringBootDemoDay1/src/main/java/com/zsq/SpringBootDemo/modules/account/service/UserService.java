@@ -1,5 +1,7 @@
 package com.zsq.SpringBootDemo.modules.account.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.github.pagehelper.PageInfo;
 import com.zsq.SpringBootDemo.modules.account.entity.User;
 import com.zsq.SpringBootDemo.modules.commom.vo.Result;
@@ -23,4 +25,7 @@ public interface UserService {
 	
 	Result<User> editUser(User user);
 	
+	Result<String> uploadUserImage(MultipartFile userImage);
+	
+	Result<User> updataUserProfile(User user);
 }

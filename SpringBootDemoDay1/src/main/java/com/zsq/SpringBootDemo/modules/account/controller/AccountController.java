@@ -21,4 +21,9 @@ public class AccountController {
 	public String ResourcePage() {
 		return "index";
 	}
+	
+	@RequestMapping("/profile")
+	public String ProfilePage() {
+		return "index";
+	}
 }

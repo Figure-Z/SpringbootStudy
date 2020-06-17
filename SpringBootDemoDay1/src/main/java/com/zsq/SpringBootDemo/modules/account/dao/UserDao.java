@@ -58,7 +58,7 @@ public interface UserDao {
 	void insertUser(User user);
 	
 	//更新数据
-	@Update("update user set user_name = #{userName} where user_id = #{userId}")
+	@Update("update user set user_name = #{userName},user_img = #{userImg} where user_id = #{userId}")
 	void updateUserMessage(User user);
 	
 	//删除用户

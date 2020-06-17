@@ -1,16 +1,22 @@
 package com.zsq.SpringBootDemo.modules.account.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zsq.SpringBootDemo.config.ResourceConfigBean;
 import com.zsq.SpringBootDemo.modules.account.dao.UserDao;
 import com.zsq.SpringBootDemo.modules.account.dao.UserRoleDao;
 import com.zsq.SpringBootDemo.modules.account.entity.Role;
@@ -19,15 +25,20 @@ import com.zsq.SpringBootDemo.modules.account.service.UserService;
 import com.zsq.SpringBootDemo.modules.commom.vo.Result;
 import com.zsq.SpringBootDemo.modules.commom.vo.Result.ResultStatus;
 import com.zsq.SpringBootDemo.modules.commom.vo.SearchVo;
+import com.zsq.SpringBootDemo.utils.FileUtil;
 import com.zsq.SpringBootDemo.utils.MD5Util;
 
 @Service
 public class UserServiceImpl implements UserService{
 
+	private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+	
 	@Autowired
 	private UserDao userDao;
 	@Autowired
 	private UserRoleDao userRoleDao;
+	@Autowired
+	private ResourceConfigBean resourceConfigBean;
 	
 	@Override
 	public User getUserByUserId(int userId) {
@@ -146,6 +157,50 @@ public class UserServiceImpl implements UserService{
 				return new Result<User>(ResultStatus.SUCCESS.status,"Edit Success",user);
 	}
 
-	
+	/**
+	 * 上传图片
+	 */
+	@Override
+	public Result<String> uploadUserImage(MultipartFile userImage) {
+		//判断上传是否为空
+		if(userImage.isEmpty()) {
+			return new Result<>(ResultStatus.FAILD.status,"Upload img is empty");
+		}
+		//判断上传的是否为图片
+		if (!FileUtil.isImage(userImage)) {
+			return new Result<>(ResultStatus.FAILD.status, "File is not a image.");
+		}
+		//获取文件名称
+		String originalFilename = userImage.getOriginalFilename();
+		//获取相对路径
+		String relatedPath = resourceConfigBean.getResourcePath() + originalFilename;
+		String destPath = String.format("%s%s", resourceConfigBean.getLocalPathForWindows(), originalFilename);
+		try {
+			File destFile = new File(destPath);
+			userImage.transferTo(destFile);//上传
+			
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+			LOGGER.debug(e.getMessage());
+			return new Result<>(ResultStatus.FAILD.status, "File upload error.");
+		}
+		
+		return new Result<>(ResultStatus.SUCCESS.status, "File upload success.", relatedPath);
+	}
 
+	/**
+	 * 用于保存头像资源地址
+	 */
+	@Override
+	@Transactional
+	public Result<User> updataUserProfile(User user) {
+		User userTemp = getUserByUserName(user.getUserName());
+		if(userTemp != null && userTemp.getUserId() != user.getUserId()) {
+			return new Result<User>(ResultStatus.FAILD.status,"User name is repeat");
+		}
+		
+		userDao.updateUserMessage(user);
+		
+		return new Result<User>(ResultStatus.SUCCESS.status,"Edit Success",user);
+	}
 }

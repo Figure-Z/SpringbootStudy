@@ -19,9 +19,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @Table(name="user")自动生成后的表名
  * 
  * @Transient自动生成时要排除的字段
- * 
- * @author: HymanHu
- * @date: 2019年11月28日
  */
 @Entity
 @Table(name="user")
@@ -33,6 +30,7 @@ public class User {
 	private String password;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createDate;
+	private String userImg;
 	
 	@Transient
 	private boolean rememberMe;
@@ -85,6 +83,14 @@ public class User {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public String getUserImg() {
+		return userImg;
+	}
+
+	public void setUserImg(String userImg) {
+		this.userImg = userImg;
 	}
 
 }
