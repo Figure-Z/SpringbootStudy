@@ -28,4 +28,6 @@ public interface UserService {
 	Result<String> uploadUserImage(MultipartFile userImage);
 	
 	Result<User> updataUserProfile(User user);
+	
+	void logout();
 }

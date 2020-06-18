@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,10 +114,26 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public Result<User> login(User user) {
-		User userTemp = userDao.getUserByUserName(user.getUserName());
-		if(userTemp == null || userTemp.getPassword().equals(MD5Util.getMD5(user.getPassword()))){
-			return new Result<User>(ResultStatus.FAILD.status,"username or passwoed wrone");
+//		User userTemp = userDao.getUserByUserName(user.getUserName());
+//		if(userTemp == null || userTemp.getPassword().equals(MD5Util.getMD5(user.getPassword()))){
+//			return new Result<User>(ResultStatus.FAILD.status,"username or passwoed wrone");
+//		}
+		
+		try {
+			//获取subject组件
+			Subject subject = SecurityUtils.getSubject();
+			//包装令牌
+			UsernamePasswordToken usernamePasswordToken = 
+					new UsernamePasswordToken(user.getUserName(), MD5Util.getMD5(user.getPassword()));
+			usernamePasswordToken.setRememberMe(user.getRememberMe());
+			
+			subject.login(usernamePasswordToken);
+			subject.checkRoles();
+		}catch (Exception e) {
+			e.printStackTrace();
+			return new Result<User>(ResultStatus.FAILD.status, "User name or password error.");
 		}
+		
 		return new Result<User>(ResultStatus.SUCCESS.status,"login Success",user);
 	}
 
@@ -202,5 +221,11 @@ public class UserServiceImpl implements UserService{
 		userDao.updateUserMessage(user);
 		
 		return new Result<User>(ResultStatus.SUCCESS.status,"Edit Success",user);
+	}
+	
+	@Override
+	public void logout() {
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
 	}
 }

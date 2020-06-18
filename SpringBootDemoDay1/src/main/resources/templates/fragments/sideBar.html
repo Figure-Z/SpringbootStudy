@@ -26,22 +26,22 @@
 		<div class="menu_section">
 			
 			<ul class="nav side-menu">
-				<li><a href="/common/dashboard"><i class="fa fa-heart"></i>首页</a></li>
+				<li shiro:hasAnyRoles="admin,manager,staff"><a href="/common/dashboard"><i class="fa fa-heart"></i>首页</a></li>
 			</ul>
 			
 			<ul class="nav side-menu">
 				<li><a><i class="fa fa-user"></i> Account <span
 						class="fa fa-chevron-down"></span></a>
 					<ul class="nav child_menu">
-						<li><a href="/account/profile">Profile</a></li>
-						<li><a href="/account/users">user</a></li>
-						<li><a href="/account/roles">role</a></li>
-						<li><a href="/account/resources">resource</a></li>
+						<li shiro:hasAnyRoles="admin,manager,staff"><a href="/account/profile">Profile</a></li>
+						<li shiro:hasAnyRoles="admin,manager"><a href="/account/users">user</a></li>
+						<li shiro:hasAnyRoles="admin,manager"><a href="/account/roles">role</a></li>
+						<li shiro:hasAnyRoles="admin,manager"><a href="/account/resources">resource</a></li>
 					</ul></li>
 			</ul>
 			
 			<ul class="nav side-menu">
-				<li><a href="/test/index"><i class="fa fa-tree"></i>测试</a></li>
+				<li shiro:hasAnyRoles="admin,manager,staff"><a href="/test/index"><i class="fa fa-tree"></i>测试</a></li>
 			</ul>
 		</div>
 

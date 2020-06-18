@@ -1,5 +1,7 @@
 package com.zsq.SpringBootDemo.modules.account.controller;
 
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +48,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/user/{userId}")
+	@RequiresPermissions(value={"/api/user"}, logical= Logical.OR)  //设置访问要求的资源
 	public Result<Object> deleteUser(@PathVariable int userId){
 		return userService.deleteUser(userId);
 	}
